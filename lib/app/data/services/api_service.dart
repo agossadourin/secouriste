@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:dio/dio.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:secouriste/app/data/city.dart';
