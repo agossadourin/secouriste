@@ -1,4 +1,4 @@
-import 'dart:ffi';
+import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:secouriste/app/data/city.dart';
@@ -6,6 +6,7 @@ import 'package:secouriste/app/data/city.dart';
 class PrincipalController extends GetxController {
   static PrincipalController instance = Get.find();
   RxInt currentPage = 0.obs;
+  RxInt remainingTime = 5.obs;
 
 //init data method. This method call api service to get the cities coordinates of the cities in the data list and store them in the cities list
   /*Future<void> initData() async {
@@ -27,6 +28,7 @@ class PrincipalController extends GetxController {
   RxDouble currentLatitude = 0.0.obs;
   RxDouble currentLongitude = 0.0.obs;
   RxBool isLoading = false.obs;
+  Rx<Timer?> timer = Rx<Timer?>(null);
 
   List<City> citiesList = [
     City(

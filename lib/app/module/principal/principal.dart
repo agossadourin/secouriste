@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:secouriste/app/core/constants.dart';
 import 'package:secouriste/app/core/instances.dart';
 import 'package:secouriste/app/module/principal/contacts/contacts_page.dart';
+import 'package:secouriste/app/module/principal/emergency_contacts/emergency_contacts_page.dart';
 import 'package:secouriste/app/module/principal/home/home.dart';
 
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
@@ -29,7 +30,9 @@ class Principal extends StatelessWidget {
             title: Obx(() => Text(
                 principalController.currentPage.value == 0
                     ? 'Acceuil'
-                    : 'Contacts Coridors',
+                    : principalController.currentPage.value == 1
+                        ? 'Contacts Coridors'
+                        : 'Mes contacts d\'urgence',
                 style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -52,7 +55,11 @@ class Principal extends StatelessWidget {
                         principalController.currentPage.value = index;
                         index;
                       },
-                      children: const [Home(), ContactsPage()],
+                      children: [
+                        const Home(),
+                        const ContactsPage(),
+                        EmergencyContactsPage()
+                      ],
                     ),
                   ),
                 ),
@@ -87,6 +94,21 @@ class Principal extends StatelessWidget {
                   selectedColor: Colors.white,
                   unSelectedColor: Colors.white,
                   title: principalController.currentPage.value == 1
+                      ? const CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 5, // Adjust the size of the dot as needed
+                        )
+                      : const SizedBox(),
+                ),
+                BottomBarItem(
+                  icon: const Icon(
+                    Icons.emergency_outlined,
+                    size: 24,
+                  ),
+                  selectedIcon: const Icon(Icons.emergency, size: 35),
+                  selectedColor: Colors.white,
+                  unSelectedColor: Colors.white,
+                  title: principalController.currentPage.value == 2
                       ? const CircleAvatar(
                           backgroundColor: Colors.white,
                           radius: 5, // Adjust the size of the dot as needed

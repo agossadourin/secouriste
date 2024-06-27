@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:location/location.dart';
+import 'package:secouriste/app/core/instances.dart';
 import 'package:secouriste/app/module/principal/principal.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -10,9 +12,45 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  Future<void> _getLocation() async {
+    Location location = Location();
+
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    locationData = await location.getLocation();
+    principalController.currentLatitude.value = locationData.latitude!;
+    principalController.currentLongitude.value = locationData.longitude!;
+
+    String locationCity = await apiService.getCityName(
+        locationData.latitude!, locationData.longitude!);
+    principalController.currentLocation.value = locationCity;
+
+    print("Location: ${locationData.latitude}, ${locationData.longitude}");
+  }
+
   @override
   void initState() {
     super.initState();
+    _getLocation();
+
     _navigateToNextScreen();
   }
 

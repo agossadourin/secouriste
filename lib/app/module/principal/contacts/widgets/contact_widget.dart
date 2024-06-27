@@ -3,7 +3,6 @@ import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
 import 'package:secouriste/app/core/constants.dart';
 import 'package:secouriste/app/data/city.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ContactWidget extends StatelessWidget {
   const ContactWidget({super.key, required this.city});
@@ -16,7 +15,7 @@ class ContactWidget extends StatelessWidget {
       children: [
         ListTile(
           title: Text(
-            ' Coridor ${city!.name}',
+            ' Corridor ${city!.name}',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
             ),

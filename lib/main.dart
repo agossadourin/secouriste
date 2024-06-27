@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:secouriste/app/module/principal/controllers/principal_controller.dart';
+import 'package:secouriste/app/module/principal/emergency_contacts/controllers/emergency_contact_controller.dart';
 
 import 'package:secouriste/app/module/splash_screen/splash_screen.dart';
 
 void main() async {
   Get.put(PrincipalController());
+  Get.put(EmergencyContactController());
 
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());

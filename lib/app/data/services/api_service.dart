@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+
 import 'package:geolocator/geolocator.dart';
 import 'package:secouriste/app/data/city.dart';
 
@@ -131,4 +132,62 @@ class ApiService {
   }
 
   //send email method that send a mail to given email, containing maps link to user location and a message
+  /*Future<void> sendEmail(String email, double latitude, double longitude) async {
+    final String subject = 'Emergency';
+    final String body =
+        'I need help. Here is my location: https://www.openstreetmap.org/?mlat=$latitude&mlon=$longitude#map=15/$latitude/$longitude';
+    final String url = 'mailto:$email?subject=$subject&body=$body';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }*/
+
+  Future<void> sendMail(String email, double latitude, double longitude) async {
+    var url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
+    const String serviceId = 'service_bawxbjv';
+    const String templateId = 'template_31dll64';
+    const String userId = 'S_cDRZPOgUweCxJa1';
+    final String body =
+        'I need help. Here is my location: https://www.openstreetmap.org/?mlat=$latitude&mlon=$longitude#map=15/$latitude/$longitude \n if you use google maps: https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    // dio post
+
+    try {
+      final response = await Dio().post(
+        url.toString(),
+        data: {
+          'service_id': serviceId,
+          'template_id': templateId,
+          'user_id': userId,
+          'template_params': {
+            'message': body,
+            'to_email': email,
+          },
+        },
+        options: Options(headers: {
+          'origin': 'http://localhost',
+          'Content-Type': 'application/json'
+        }),
+      );
+      print(
+          "*************************email sent successfully*************************");
+      print(response.data);
+    } catch (e) {
+      print("*************************email not sent*************************");
+      print(e);
+    }
+  }
+
+  //sending sms
+  /*Future<void> sendSmsMessage(
+      List<String> recipients, double latitude, double longitude) async {
+    final String body =
+        'I need help. Here is my location: https://www.openstreetmap.org/?mlat=$latitude&mlon=$longitude#map=15/$latitude/$longitude \n if you use google maps: https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    try {
+      await sendSMS(message: body, recipients: recipients);
+    } catch (e) {
+      print('Failed to send SMS: $e');
+    }
+  }*/
 }

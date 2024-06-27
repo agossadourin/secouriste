@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.04,
           ),
           const Text(
-            'Police Républicaine',
+            'Vous êtes en danger?',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.black,
