@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -7,9 +8,29 @@ import 'package:secouriste/app/core/constants.dart';
 import 'package:secouriste/app/core/instances.dart';
 import 'package:secouriste/app/data/city.dart';
 import 'package:secouriste/app/module/principal/emergency_contacts/controllers/emergency_contact_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AlertButton extends StatelessWidget {
   const AlertButton({super.key});
+
+  void callNumber(String number) async {
+    if (Platform.isAndroid || Platform.isIOS) {
+      // Utiliser FlutterPhoneDirectCaller pour Android/iOS
+      bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+      print('callNumber result: $res');
+    } else {
+      // Utiliser url_launcher pour le web
+      final Uri launchUri = Uri(
+        scheme: 'tel',
+        path: number,
+      );
+      if (await canLaunchUrl(launchUri)) {
+        await launchUrl(launchUri);
+      } else {
+        throw 'Could not launch $number';
+      }
+    }
+  }
 
   void _launchCall() async {
     // Add your functionality here
@@ -18,7 +39,8 @@ class AlertButton extends StatelessWidget {
         principalController.currentLatitude.value,
         principalController.currentLongitude.value);
     print('nom de la ville: ${city.name} numéro de téléphone: ${city.number}');
-    await FlutterPhoneDirectCaller.callNumber(city.number.toString());
+    callNumber(city.number.toString());
+    //await FlutterPhoneDirectCaller.callNumber(city.number.toString());
     await apiService.sendMail(
         Get.find<EmergencyContactController>().email.value,
         principalController.currentLatitude.value,
@@ -42,7 +64,7 @@ class AlertButton extends StatelessWidget {
                 principalController.remainingTime.value - 1;
             print('timer: ${principalController.remainingTime.value}');
             if (principalController.remainingTime.value == 0) {
-              principalController.remainingTime.value = 5;
+              principalController.remainingTime.value = 3;
               _launchCall();
               principalController.timer.value!.cancel();
               principalController.timer.value = null;
@@ -50,7 +72,7 @@ class AlertButton extends StatelessWidget {
           });
         } else {
           // Cancel the timer and reset it
-          principalController.remainingTime.value = 5;
+          principalController.remainingTime.value = 3;
           principalController.isLoading.value = false;
           principalController.timer.value!.cancel();
           principalController.timer.value = null;
