@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:get/get.dart';
@@ -14,11 +15,7 @@ class AlertButton extends StatelessWidget {
   const AlertButton({super.key});
 
   void callNumber(String number) async {
-    if (Platform.isAndroid || Platform.isIOS) {
-      // Utiliser FlutterPhoneDirectCaller pour Android/iOS
-      bool? res = await FlutterPhoneDirectCaller.callNumber(number);
-      print('callNumber result: $res');
-    } else {
+    if (kIsWeb) {
       // Utiliser url_launcher pour le web
       final Uri launchUri = Uri(
         scheme: 'tel',
@@ -29,6 +26,10 @@ class AlertButton extends StatelessWidget {
       } else {
         throw 'Could not launch $number';
       }
+    } else {
+      // Utiliser FlutterPhoneDirectCaller pour Android/iOS
+      bool? res = await FlutterPhoneDirectCaller.callNumber(number);
+      print('callNumber result: $res');
     }
   }
 
