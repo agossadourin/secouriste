@@ -10,7 +10,7 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
           horizontal: MediaQuery.of(context).size.width * 0.15),
       child: Column(
